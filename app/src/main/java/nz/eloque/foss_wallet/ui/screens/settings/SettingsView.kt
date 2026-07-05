@@ -69,7 +69,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 coroutineScope.launch(Dispatchers.IO) {
                     val result =
                         try {
-                            save(passes.map { it.pass }, target, context)
+                            save(passes.map { it.pass }, target, context, passes.associate { it.pass.id to it.tags })
                         } catch (e: Exception) {
                             Log.w("SettingsView", "Failed saving export: $e")
                             null
@@ -201,7 +201,7 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 icon = Icons.Default.Share,
                 onClick = {
                     coroutineScope.launch(Dispatchers.IO) {
-                        val result = share(passes.map { it.pass }, context)
+                        val result = share(passes.map { it.pass }, context, passes.associate { it.pass.id to it.tags })
                         withContext(Dispatchers.Main) {
                             when (result) {
                                 is BundleShareResult.NothingToShare ->
