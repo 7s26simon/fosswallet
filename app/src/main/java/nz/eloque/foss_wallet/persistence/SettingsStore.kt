@@ -5,6 +5,10 @@ import androidx.annotation.StringRes
 import androidx.compose.ui.Alignment
 import androidx.core.content.edit
 import jakarta.inject.Inject
+import jakarta.inject.Singleton
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.model.SortOption
 import nz.eloque.foss_wallet.model.SortOptionSerializer
@@ -20,6 +24,7 @@ private const val SORT_OPTION = "walletViewSortOption"
 private const val TAG_FILTER = "walletViewTagFilter"
 private const val FILTERS_EXPANDED = "walletViewFiltersExpanded"
 private const val DELETE_CONFIRMATION_ENABLED = "deleteConfirmationEnabled"
+private const val OLED_DARK = "oledDarkTheme"
 
 sealed class BarcodePosition(
     val alignment: Alignment,
@@ -45,11 +50,22 @@ sealed class BarcodePosition(
     }
 }
 
+@Singleton
 class SettingsStore
     @Inject
     constructor(
         private val prefs: SharedPreferences,
     ) {
+        private val _oledDarkState = MutableStateFlow(prefs.getBoolean(OLED_DARK, false))
+        val oledDarkState: StateFlow<Boolean> = _oledDarkState.asStateFlow()
+
+        fun oledDark(): Boolean = prefs.getBoolean(OLED_DARK, false)
+
+        fun setOledDark(enabled: Boolean) {
+            prefs.edit { putBoolean(OLED_DARK, enabled) }
+            _oledDarkState.value = enabled
+        }
+
         fun isSyncEnabled(): Boolean = prefs.getBoolean(SYNC_ENABLED, false)
 
         fun enableSync(enabled: Boolean) = prefs.edit { putBoolean(SYNC_ENABLED, enabled) }
