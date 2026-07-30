@@ -68,7 +68,7 @@ class Loader(
                 Log.e(TAG, "Failed to load pass from intent: $e")
                 coroutineScope.launch(Dispatchers.Main) {
                     Toast
-                        .makeText(context, context.getString(R.string.invalid_pass_toast), Toast.LENGTH_SHORT)
+                        .makeText(context, context.getString(R.string.invalid_pass_toast), Toast.LENGTH_LONG)
                         .show()
                 }
                 return LoaderResult.Invalid
@@ -77,7 +77,7 @@ class Loader(
         if (loadResults.isEmpty()) {
             coroutineScope.launch(Dispatchers.Main) {
                 Toast
-                    .makeText(context, context.getString(R.string.no_passes_found_in_file), Toast.LENGTH_SHORT)
+                    .makeText(context, context.getString(R.string.no_passes_found_in_file), Toast.LENGTH_LONG)
                     .show()
             }
             return LoaderResult.Invalid
@@ -91,7 +91,12 @@ class Loader(
                 when (importResult) {
                     is ImportResult.Replaced -> {
                         Toast
-                            .makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_SHORT)
+                            .makeText(context, context.getString(R.string.pass_already_imported), Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    is ImportResult.AutoArchived -> {
+                        Toast
+                            .makeText(context, context.getString(R.string.pass_imported_into_the_archive), Toast.LENGTH_LONG)
                             .show()
                     }
                     else -> {

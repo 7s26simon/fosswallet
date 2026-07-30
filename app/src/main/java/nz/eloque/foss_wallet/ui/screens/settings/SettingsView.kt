@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -38,9 +39,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nz.eloque.compose_kit.components.Section
 import nz.eloque.compose_kit.input.ComboBox
-import nz.eloque.compose_kit.input.SubmittableTextField
 import nz.eloque.compose_kit.settings.SettingsButton
 import nz.eloque.compose_kit.settings.SettingsSwitch
+import nz.eloque.compose_kit.settings.SettingsTextField
 import nz.eloque.foss_wallet.R
 import nz.eloque.foss_wallet.persistence.BarcodePosition
 import nz.eloque.foss_wallet.persistence.ThemeMode
@@ -119,12 +120,12 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                 onCheckedChange = { coroutineScope.launch(Dispatchers.IO) { settingsViewModel.enableSync(it) } },
             )
             HorizontalDivider()
-            SubmittableTextField(
-                label = stringResource(R.string.sync_interval),
+            SettingsTextField(
+                title = stringResource(R.string.sync_interval),
                 initialValue =
                     settings.value.syncInterval.inWholeMinutes
                         .toString(),
-                imageVector = Icons.Default.Save,
+                imageVector = Icons.Default.Update,
                 inputValidator = { isNaturalNumber(it) },
                 onSubmit = {
                     coroutineScope.launch(Dispatchers.IO) {
@@ -134,7 +135,6 @@ fun SettingsView(settingsViewModel: SettingsViewModel) {
                     }
                 },
                 enabled = settings.value.enableSync,
-                clearOnSubmit = false,
             )
         }
         Section(
